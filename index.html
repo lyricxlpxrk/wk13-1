@@ -1,0 +1,890 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Pronunciation Lab</title>
+<style>
+:root {
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --ink:#202b3c;
+  --muted:#718096;
+  --primary:#5267d9;
+  --primary-light:#edf0ff;
+  --line:#e5e9f2;
+  --green:#16865b;
+  --red:#d34b57;
+  --orange:#d48a25;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:Arial,"Noto Sans KR",sans-serif;
+}
+button{font:inherit;cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
+.app{max-width:1100px;margin:auto;padding:24px 18px 60px}
+header{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:15px;margin-bottom:25px;
+}
+.logo{font-size:22px;font-weight:800;letter-spacing:-.7px}
+.logo span{color:var(--primary)}
+.header-sub{font-size:12px;color:var(--muted);margin-top:5px}
+.pill{
+  padding:8px 13px;border-radius:20px;background:var(--primary-light);
+  color:var(--primary);font-size:12px;font-weight:bold;
+}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+nav button{
+  border:1px solid var(--line);background:white;color:var(--muted);
+  padding:10px 15px;border-radius:10px;font-size:13px;
+}
+nav button.active{background:var(--primary);color:white;border-color:var(--primary)}
+.view{display:none}
+.view.active{display:block}
+h1{font-size:27px;margin:0 0 9px;letter-spacing:-1px}
+h2{font-size:19px;margin:0 0 14px}
+h3{font-size:15px;margin:0 0 9px}
+p{line-height:1.65}
+.sub{color:var(--muted);font-size:14px;line-height:1.7}
+.card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:16px;padding:21px;margin-bottom:15px;
+}
+.hero{
+  background:linear-gradient(120deg,#263b78,#596ddd);
+  color:white;border-radius:19px;padding:28px;margin-bottom:18px;
+}
+.hero h1{font-size:30px}
+.hero p{color:#e1e6ff;font-size:14px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.stat{
+  background:white;border:1px solid var(--line);border-radius:14px;
+  padding:17px;
+}
+.stat strong{font-size:25px;display:block;margin-bottom:5px}
+.stat span{font-size:12px;color:var(--muted)}
+.progress{
+  height:8px;background:#e9edf5;border-radius:20px;overflow:hidden;
+}
+.progress div{height:100%;background:var(--primary);border-radius:20px}
+.unit-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.unit{
+  border:1px solid var(--line);background:white;border-radius:14px;
+  padding:17px;text-align:left;color:var(--ink);transition:.15s;
+}
+.unit:hover{border-color:var(--primary);transform:translateY(-2px)}
+.unit-top{display:flex;justify-content:space-between;align-items:center}
+.unit-num{font-size:11px;color:var(--primary);font-weight:bold}
+.unit h3{margin:12px 0 5px;font-size:16px}
+.unit p{font-size:12px;color:var(--muted);margin:0 0 13px}
+.unit small{color:var(--muted)}
+.lesson-head{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:18px;gap:10px;
+}
+.back{
+  border:1px solid var(--line);background:white;border-radius:9px;
+  padding:9px 13px;color:var(--ink);font-size:13px;
+}
+.lesson-card{text-align:center;padding:30px 20px}
+.ipa{font-size:42px;font-weight:800;color:var(--primary);margin:13px 0}
+.word{font-size:29px;font-weight:bold;margin:10px 0}
+.meaning{color:var(--muted);font-size:14px}
+.tip{
+  background:#f0f3ff;border-radius:12px;padding:14px;
+  text-align:left;font-size:14px;line-height:1.7;margin-top:18px;
+}
+.example{
+  background:#f7f8fb;padding:14px;border-radius:12px;
+  margin-top:14px;text-align:left;
+}
+.example strong{font-size:17px}
+.btn{
+  border:0;background:var(--primary);color:white;
+  padding:12px 18px;border-radius:10px;font-weight:bold;
+}
+.btn.secondary{background:#edf0ff;color:var(--primary)}
+.btn.light{background:white;color:var(--ink);border:1px solid var(--line)}
+.btn.danger{background:#fff0f0;color:var(--red)}
+.btn-row{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.practice-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.record-box{
+  border:1px solid var(--line);border-radius:14px;padding:20px;
+  text-align:center;background:white;
+}
+.mic{
+  width:66px;height:66px;border-radius:50%;border:0;
+  background:var(--primary-light);color:var(--primary);
+  font-size:27px;margin:10px auto;display:block;
+}
+.mic.recording{background:#ffe9eb;color:var(--red);animation:pulse 1s infinite}
+@keyframes pulse{50%{transform:scale(1.08)}}
+.status{font-size:13px;color:var(--muted);min-height:22px;margin:8px}
+.transcript{
+  background:#f6f7fa;padding:13px;border-radius:10px;
+  min-height:48px;text-align:left;font-size:14px;line-height:1.6;
+  word-break:break-word;
+}
+.feedback{border-radius:12px;padding:16px;margin-top:14px;line-height:1.7;font-size:14px}
+.feedback.good{background:#e9f7f0;color:#176746}
+.feedback.bad{background:#fff2e4;color:#87521b}
+.feedback.neutral{background:#edf0ff;color:#364a9c}
+.hidden{display:none!important}
+.small{font-size:12px;color:var(--muted);line-height:1.6}
+.tag{
+  display:inline-block;background:#edf0ff;color:var(--primary);
+  padding:5px 9px;border-radius:20px;font-size:11px;margin:3px;
+}
+.choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.choice{
+  border:1px solid var(--line);background:white;padding:15px;
+  border-radius:11px;font-size:17px;font-weight:bold;
+}
+.choice.selected{border:2px solid var(--primary);background:var(--primary-light)}
+.choice.correct{background:#e9f7f0;border-color:var(--green)}
+.choice.wrong{background:#fff0f0;border-color:var(--red)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td,th{padding:12px 8px;border-bottom:1px solid var(--line);text-align:left}
+th{color:var(--muted);font-weight:normal}
+footer{text-align:center;color:var(--muted);font-size:11px;margin-top:30px}
+@media(max-width:650px){
+ .app{padding:17px 12px 40px}
+ .stats{gap:7px}
+ .stat{padding:12px}
+ .stat strong{font-size:20px}
+ .unit-grid,.practice-grid{grid-template-columns:1fr}
+ .hero{padding:22px}
+ .hero h1{font-size:25px}
+ h1{font-size:23px}
+ .lesson-card{padding:23px 13px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<header>
+  <div>
+    <div class="logo">ENGLISH <span>PRONUNCIATION LAB</span></div>
+    <div class="header-sub">High School · Intermediate English</div>
+  </div>
+  <div class="pill">AMERICAN ENGLISH</div>
+</header>
+
+<nav>
+  <button class="active" data-view="home">학습 홈</button>
+  <button data-view="learn">발음 학습</button>
+  <button data-view="practice">발음 연습</button>
+  <button data-view="report">학습 결과</button>
+</nav>
+
+<!-- HOME -->
+<section id="home" class="view active">
+  <div class="hero">
+    <div class="tag" style="background:#ffffff25;color:white">PRONUNCIATION TRAINING</div>
+    <h1>Understand the Sound.<br>Speak with Confidence.</h1>
+    <p>발음 기호를 이해하고, 소리를 구별하고,<br>직접 말하면서 영어 발음을 연습해 보세요.</p>
+    <button class="btn" style="background:white;color:#344a9e" onclick="showView('learn')">학습 시작하기 →</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><strong id="completedCount">0/7</strong><span>완료한 유닛</span></div>
+    <div class="stat"><strong id="practiceCount">0</strong><span>발음 연습 횟수</span></div>
+    <div class="stat"><strong id="bestScore">-</strong><span>최고 일치율</span></div>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+      <strong>전체 학습 진행률</strong>
+      <strong id="progressText">0%</strong>
+    </div>
+    <div class="progress"><div id="homeProgress" style="width:0%"></div></div>
+  </div>
+
+  <h2>Learning Units</h2>
+  <div id="homeUnits" class="unit-grid"></div>
+</section>
+
+<!-- LEARN -->
+<section id="learn" class="view">
+  <div class="lesson-head">
+    <div>
+      <h1>IPA 발음 학습</h1>
+      <div class="sub">발음 기호와 실제 영어 소리를 연결해 보세요.</div>
+    </div>
+  </div>
+  <div id="learnContent">
+    <div class="unit-grid" id="learnUnits"></div>
+  </div>
+</section>
+
+<!-- PRACTICE -->
+<section id="practice" class="view">
+  <div class="lesson-head">
+    <div>
+      <h1>Pronunciation Practice</h1>
+      <div class="sub">듣고, 말하고, 음성 인식 결과를 확인하세요.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <label for="practiceSelect" style="font-weight:bold;font-size:13px">연습할 발음 선택</label>
+    <select id="practiceSelect" style="display:block;width:100%;padding:12px;margin-top:9px;border:1px solid var(--line);border-radius:9px;font-size:14px"></select>
+  </div>
+
+  <div class="card lesson-card">
+    <div class="tag">TARGET PRONUNCIATION</div>
+    <div id="practiceIPA" class="ipa">/ɪ/</div>
+    <div id="practiceWord" class="word">ship</div>
+    <div id="practiceMeaning" class="meaning">배</div>
+    <div class="tip" id="practiceTip"></div>
+    <div class="example">
+      <div class="small">SENTENCE PRACTICE</div>
+      <strong id="practiceSentence">The ship is big.</strong>
+      <div class="small" style="margin-top:7px">문장 전체를 읽어 보세요.</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn secondary" onclick="speakCurrent()">🔊 원어민 발음 듣기</button>
+    </div>
+  </div>
+
+  <div class="practice-grid">
+    <div class="record-box">
+      <h3>1. 단어 발음 연습</h3>
+      <p class="small">단어를 듣고 마이크를 눌러 말해 보세요.</p>
+      <button class="mic" id="wordMic" onclick="startRecognition('word')">🎙</button>
+      <div class="status" id="wordStatus">마이크를 눌러 시작하세요.</div>
+      <div class="transcript" id="wordTranscript">인식 결과가 여기에 표시됩니다.</div>
+      <div id="wordFeedback" class="feedback hidden"></div>
+    </div>
+
+    <div class="record-box">
+      <h3>2. 문장 발음 연습</h3>
+      <p class="small">목표 문장을 자연스럽게 읽어 보세요.</p>
+      <button class="mic" id="sentenceMic" onclick="startRecognition('sentence')">🎙</button>
+      <div class="status" id="sentenceStatus">마이크를 눌러 시작하세요.</div>
+      <div class="transcript" id="sentenceTranscript">인식 결과가 여기에 표시됩니다.</div>
+      <div id="sentenceFeedback" class="feedback hidden"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>연습 안내</h3>
+    <p class="small">
+      음성 인식은 실제 발음의 음소 정확도를 측정하지 않습니다.
+      인식 결과는 발음이 아닌 음성 인식 시스템의 추정 결과입니다.
+      마이크 사용 권한과 인터넷 연결이 필요할 수 있습니다.
+    </p>
+  </div>
+</section>
+
+<!-- REPORT -->
+<section id="report" class="view">
+  <h1>Learning Report</h1>
+  <p class="sub">지금까지의 학습 기록을 확인하세요.</p>
+  <div class="stats">
+    <div class="stat"><strong id="reportUnits">0</strong><span>완료 유닛</span></div>
+    <div class="stat"><strong id="reportAttempts">0</strong><span>총 연습 횟수</span></div>
+    <div class="stat"><strong id="reportAverage">-</strong><span>평균 일치율</span></div>
+  </div>
+  <div class="card">
+    <h2>유닛별 학습 현황</h2>
+    <div id="reportList"></div>
+  </div>
+  <div class="card">
+    <h3>기록 초기화</h3>
+    <p class="small">현재 브라우저에 저장된 학습 기록을 삭제합니다.</p>
+    <button class="btn danger" onclick="resetProgress()">학습 기록 초기화</button>
+  </div>
+</section>
+
+<footer>
+  English Pronunciation Lab · Learning Prototype 1.0<br>
+  Web Speech API · SpeechSynthesis API
+</footer>
+</div>
+
+<script>
+// ========================================
+// 1. 학습 콘텐츠
+// ========================================
+
+const units = [
+{
+ id:1,title:"단모음과 장모음",subtitle:"Short & Long Vowels",
+ description:"길이와 혀의 위치에 따른 모음 차이",
+ items:[
+  {ipa:"/ɪ/",word:"ship",meaning:"배",contrast:"sheep",
+   tip:"/ɪ/는 짧고 편안한 소리입니다. /iː/처럼 입을 옆으로 크게 벌리고 길게 발음하지 않도록 주의하세요.",
+   sentence:"The ship is in the sea.",
+   examples:["ship","sit","bit","live"]},
+  {ipa:"/iː/",word:"sheep",meaning:"양",contrast:"ship",
+   tip:"/iː/는 입술을 옆으로 약간 벌리고 혀 앞부분을 높게 유지하면서 길게 발음합니다.",
+   sentence:"I can see three sheep.",
+   examples:["sheep","seat","beat","leave"]},
+  {ipa:"/æ/",word:"bad",meaning:"나쁜",contrast:"bed",
+   tip:"/æ/는 입을 비교적 크게 벌리고 혀 앞부분을 낮게 두는 소리입니다.",
+   sentence:"That was a bad idea.",
+   examples:["bad","cat","map","black"]},
+  {ipa:"/e/",word:"bed",meaning:"침대",contrast:"bad",
+   tip:"/e/는 /æ/보다 입을 덜 벌리는 소리입니다. 턱의 움직임 차이에 집중하세요.",
+   sentence:"The bed is very comfortable.",
+   examples:["bed","pen","red","left"]}
+ ]
+},
+{
+ id:2,title:"모음 심화",subtitle:"More Vowel Contrasts",
+ description:"한국인 학습자가 혼동하기 쉬운 모음",
+ items:[
+  {ipa:"/ʊ/",word:"full",meaning:"가득 찬",contrast:"fool",
+   tip:"/ʊ/는 짧고 비교적 편안한 소리입니다.",
+   sentence:"The glass is full of water.",
+   examples:["full","book","look","put"]},
+  {ipa:"/uː/",word:"fool",meaning:"바보",contrast:"full",
+   tip:"/uː/는 입술을 둥글게 하고 혀 뒤쪽을 높여 길게 발음합니다.",
+   sentence:"Don't be a fool.",
+   examples:["fool","food","moon","blue"]},
+  {ipa:"/ʌ/",word:"cup",meaning:"컵",contrast:"cop",
+   tip:"/ʌ/는 입술을 둥글게 만들지 않고 편안하게 발음하는 소리입니다.",
+   sentence:"I need a cup of coffee.",
+   examples:["cup","luck","bus","love"]},
+  {ipa:"/ɑː/",word:"father",meaning:"아버지",contrast:"cut",
+   tip:"미국식 영어의 /ɑ/는 입을 열고 혀를 낮게 두어 발음합니다. 단어에 따라 길이 차이가 나타날 수 있습니다.",
+   sentence:"My father likes art.",
+   examples:["father","hot","box","stop"]}
+ ]
+},
+{
+ id:3,title:"이중모음",subtitle:"Diphthongs",
+ description:"두 가지 모음 위치가 이어지는 소리",
+ items:[
+  {ipa:"/eɪ/",word:"day",meaning:"날",contrast:"die",
+   tip:"/e/에서 /ɪ/ 방향으로 혀와 입의 위치가 이동합니다.",
+   sentence:"Today is a beautiful day.",
+   examples:["day","make","rain","play"]},
+  {ipa:"/aɪ/",word:"time",meaning:"시간",contrast:"team",
+   tip:"입을 열면서 시작해 /ɪ/ 방향으로 이동하는 소리입니다.",
+   sentence:"Time is very important.",
+   examples:["time","light","bike","kind"]},
+  {ipa:"/ɔɪ/",word:"boy",meaning:"소년",contrast:"buy",
+   tip:"/ɔ/에서 /ɪ/ 방향으로 자연스럽게 연결합니다.",
+   sentence:"The boy enjoys playing soccer.",
+   examples:["boy","choice","voice","enjoy"]},
+  {ipa:"/oʊ/",word:"go",meaning:"가다",contrast:"now",
+   tip:"미국식 /oʊ/는 입술을 둥글게 하며 소리가 이동합니다.",
+   sentence:"Let's go home.",
+   examples:["go","home","boat","know"]}
+ ]
+},
+{
+ id:4,title:"혼동하기 쉬운 자음",subtitle:"Consonant Contrasts",
+ description:"혀와 입술의 위치가 중요한 자음",
+ items:[
+  {ipa:"/θ/",word:"think",meaning:"생각하다",contrast:"sink",
+   tip:"혀끝을 윗니와 아랫니 사이에 가볍게 두고 공기를 내보냅니다.",
+   sentence:"I think this is important.",
+   examples:["think","three","thank","healthy"]},
+  {ipa:"/ð/",word:"they",meaning:"그들",contrast:"day",
+   tip:"/θ/와 비슷한 위치에서 발음하지만 성대가 진동합니다.",
+   sentence:"They live in this city.",
+   examples:["they","this","that","mother"]},
+  {ipa:"/r/",word:"right",meaning:"오른쪽, 옳은",contrast:"light",
+   tip:"미국식 /r/은 혀끝이 입천장에 닿지 않도록 하면서 혀를 뒤쪽으로 당깁니다.",
+   sentence:"You are right.",
+   examples:["right","red","around","river"]},
+  {ipa:"/l/",word:"light",meaning:"빛",contrast:"right",
+   tip:"혀끝을 윗잇몸에 대고 공기를 혀의 양옆으로 흘려보냅니다.",
+   sentence:"The light is very bright.",
+   examples:["light","love","long","school"]},
+  {ipa:"/f/",word:"fan",meaning:"선풍기",contrast:"pan",
+   tip:"윗니를 아랫입술에 가볍게 대고 공기를 내보냅니다.",
+   sentence:"The fan is on.",
+   examples:["fan","fine","coffee","life"]},
+  {ipa:"/v/",word:"vest",meaning:"조끼",contrast:"best",
+   tip:"/f/와 같은 위치에서 발음하되 성대를 진동시킵니다.",
+   sentence:"I bought a new vest.",
+   examples:["vest","very","visit","love"]}
+ ]
+},
+{
+ id:5,title:"자음 연결과 묵음",subtitle:"Consonant Clusters & Silent Letters",
+ description:"자음이 연속해서 나타나는 단어",
+ items:[
+  {ipa:"/str/",word:"street",meaning:"거리",contrast:"seat",
+   tip:"/s/, /t/, /r/의 순서를 유지하며 소리를 연결합니다.",
+   sentence:"The street is very busy.",
+   examples:["street","strong","strange","strategy"]},
+  {ipa:"/spl/",word:"splash",meaning:"철벅거리다",contrast:"slash",
+   tip:"/s/, /p/, /l/을 각각 분명하게 연결합니다.",
+   sentence:"Water made a big splash.",
+   examples:["splash","split","spleen","splendid"]},
+  {ipa:"/w/ silent/",word:"write",meaning:"쓰다",contrast:"right",
+   tip:"write의 w는 발음하지 않습니다. 첫소리는 /r/입니다.",
+   sentence:"Please write your name.",
+   examples:["write","wrong","wrist","wrap"]},
+  {ipa:"/k/ silent/",word:"know",meaning:"알다",contrast:"now",
+   tip:"know의 k는 발음하지 않습니다. /n/으로 시작합니다.",
+   sentence:"I know the answer.",
+   examples:["know","knee","knife","knock"]}
+ ]
+},
+{
+ id:6,title:"단어 강세와 약화 모음",subtitle:"Word Stress & Schwa",
+ description:"음절 강세와 /ə/ 이해하기",
+ items:[
+  {ipa:"/ə/",word:"about",meaning:"~에 관하여",contrast:"above",
+   tip:"/ə/는 약화된 모음으로 짧고 편안하게 발음합니다. 강세가 없는 음절에서 자주 나타납니다.",
+   sentence:"Let's talk about the problem.",
+   examples:["about","around","ago","banana"]},
+  {ipa:"/ˈ/",word:"TAble",meaning:"탁자",contrast:"taBLE",
+   tip:"첫 음절에 강세가 있습니다. TA를 더 분명하고 강하게 발음합니다.",
+   sentence:"The table is made of wood.",
+   examples:["table","student","happy","teacher"]},
+  {ipa:"/ˈ/",word:"PREsent",meaning:"선물",contrast:"preSENT",
+   tip:"명사 present는 첫 음절에 강세가 있습니다. 동사 present와 비교해 보세요.",
+   sentence:"I received a present.",
+   examples:["present","record","object","conduct"]}
+ ]
+},
+{
+ id:7,title:"문장 강세와 리듬",subtitle:"Sentence Stress & Rhythm",
+ description:"핵심 정보에 강세를 주고 자연스럽게 말하기",
+ items:[
+  {ipa:"/ˈ/",word:"important",meaning:"중요한",contrast:"important",
+   tip:"im-POR-tant에서 두 번째 음절에 강세가 있습니다.",
+   sentence:"Education is important for everyone.",
+   examples:["important","information","remember","develop"]},
+  {ipa:"/ə/",word:"to",meaning:"~하기 위해",contrast:"too",
+   tip:"문장에서 기능어 to는 약화되어 /tə/ 또는 /tu/처럼 발음될 수 있습니다.",
+   sentence:"I want to learn English.",
+   examples:["to","for","can","and"]},
+  {ipa:"/linking/",word:"an apple",meaning:"사과 하나",contrast:"an orange",
+   tip:"an과 apple처럼 앞 단어의 끝소리와 다음 단어의 첫소리가 자연스럽게 연결됩니다.",
+   sentence:"I ate an apple this morning.",
+   examples:["an apple","an orange","pick it up","turn it on"]}
+ ]
+}
+];
+
+// ========================================
+// 2. 학습 기록
+// ========================================
+
+let saved = {};
+try {
+ saved = JSON.parse(localStorage.getItem("pronunciationLab") || "{}");
+} catch(e) { saved = {}; }
+
+function saveData(){
+ localStorage.setItem("pronunciationLab",JSON.stringify(saved));
+}
+
+function getStats(){
+ const attempts=saved.attempts || [];
+ return {
+  count:attempts.length,
+  average:attempts.length?
+   Math.round(attempts.reduce((a,b)=>a+b.score,0)/attempts.length):null,
+  best:attempts.length?
+   Math.max(...attempts.map(a=>a.score)):null
+ };
+}
+
+function updateDashboard(){
+ const completed=units.filter(u=>saved["unit"+u.id]).length;
+ const stats=getStats();
+ document.getElementById("completedCount").textContent=completed+"/7";
+ document.getElementById("practiceCount").textContent=stats.count;
+ document.getElementById("bestScore").textContent=stats.best===null?"-":stats.best+"%";
+ document.getElementById("progressText").textContent=Math.round(completed/7*100)+"%";
+ document.getElementById("homeProgress").style.width=(completed/7*100)+"%";
+ document.getElementById("reportUnits").textContent=completed;
+ document.getElementById("reportAttempts").textContent=stats.count;
+ document.getElementById("reportAverage").textContent=stats.average===null?"-":stats.average+"%";
+ renderReport();
+}
+
+function unitCard(u){
+ const done=!!saved["unit"+u.id];
+ return `<button class="unit" onclick="openUnit(${u.id})">
+  <div class="unit-top">
+   <span class="unit-num">UNIT ${String(u.id).padStart(2,"0")}</span>
+   <span>${done?"✓":"○"}</span>
+  </div>
+  <h3>${u.title}</h3>
+  <p>${u.subtitle}</p>
+  <div class="progress"><div style="width:${done?100:0}%"></div></div>
+  <small>${u.items.length}개 학습 항목 · ${done?"학습 완료":"학습 시작하기"}</small>
+ </button>`;
+}
+
+function renderUnits(){
+ document.getElementById("homeUnits").innerHTML=units.map(unitCard).join("");
+ document.getElementById("learnUnits").innerHTML=units.map(unitCard).join("");
+}
+
+function renderReport(){
+ const el=document.getElementById("reportList");
+ el.innerHTML=units.map(u=>{
+  const done=!!saved["unit"+u.id];
+  return `<div style="margin-bottom:17px">
+   <div style="display:flex;justify-content:space-between;margin-bottom:7px;font-size:13px">
+    <strong>${u.title}</strong><span>${done?"완료":"미완료"}</span>
+   </div>
+   <div class="progress"><div style="width:${done?100:0}%"></div></div>
+  </div>`;
+ }).join("");
+}
+
+// ========================================
+// 3. 화면 전환
+// ========================================
+
+function showView(id){
+ document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ document.querySelectorAll("nav button").forEach(b=>{
+  b.classList.toggle("active",b.dataset.view===id);
+ });
+ if(id==="report")updateDashboard();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+document.querySelectorAll("nav button").forEach(b=>{
+ b.addEventListener("click",()=>showView(b.dataset.view));
+});
+
+// ========================================
+// 4. 발음 학습 화면
+// ========================================
+
+let currentUnit=null;
+let currentItem=null;
+
+function openUnit(id){
+ currentUnit=units.find(u=>u.id===id);
+ const content=document.getElementById("learnContent");
+ content.innerHTML=`
+  <div class="lesson-head">
+   <div>
+    <div class="small">UNIT ${String(id).padStart(2,"0")}</div>
+    <h2>${currentUnit.title}</h2>
+    <div class="sub">${currentUnit.description}</div>
+   </div>
+   <button class="back" onclick="renderLearnHome()">← 목록</button>
+  </div>
+  <div id="itemArea"></div>
+ `;
+ showView("learn");
+ renderItem(0);
+}
+
+function renderLearnHome(){
+ document.getElementById("learnContent").innerHTML=
+  '<div class="unit-grid" id="learnUnits"></div>';
+ renderUnits();
+}
+
+function renderItem(index){
+ const item=currentUnit.items[index];
+ currentItem=item;
+ const area=document.getElementById("itemArea");
+ area.innerHTML=`
+  <div class="card lesson-card">
+   <div class="small">ITEM ${index+1} / ${currentUnit.items.length}</div>
+   <div class="ipa">${item.ipa}</div>
+   <div class="word">${item.word}</div>
+   <div class="meaning">${item.meaning}</div>
+   <div class="tip"><strong>발음 방법</strong><br>${item.tip}</div>
+   <div class="example">
+    <div class="small">EXAMPLE WORDS</div>
+    <div style="margin-top:7px">${item.examples.map(w=>`<span class="tag">${w}</span>`).join("")}</div>
+   </div>
+   <div class="btn-row">
+    <button class="btn" onclick="speakText('${item.word.replace(/'/g,"")}')">🔊 단어 듣기</button>
+    <button class="btn secondary" onclick="speakText('${item.sentence.replace(/'/g,"")}')">🔊 문장 듣기</button>
+   </div>
+   <div class="card" style="margin-top:22px;text-align:left">
+    <h3>발음 비교</h3>
+    <p class="small">다음 단어의 소리 차이를 들어 보세요.</p>
+    <div class="btn-row">
+     <button class="btn light" onclick="speakText('${item.word}')">${item.word}</button>
+     <button class="btn light" onclick="speakText('${item.contrast}')">${item.contrast}</button>
+    </div>
+   </div>
+   <div class="btn-row">
+    <button class="btn light" onclick="renderItem(${Math.max(0,index-1)})" ${index===0?"disabled":""}>이전</button>
+    <button class="btn" onclick="nextItem(${index})">${index===currentUnit.items.length-1?"유닛 완료":"다음 항목 →"}</button>
+   </div>
+  </div>`;
+}
+
+function nextItem(index){
+ if(index===currentUnit.items.length-1){
+  saved["unit"+currentUnit.id]=true;
+  saveData();
+  updateDashboard();
+  document.getElementById("itemArea").innerHTML=`
+   <div class="card lesson-card">
+    <div style="font-size:48px">🎉</div>
+    <h2>Unit ${currentUnit.id} Complete!</h2>
+    <p class="sub">이번 유닛의 발음 기호 학습을 완료했습니다.</p>
+    <div class="btn-row">
+     <button class="btn" onclick="showView('practice');selectUnitPractice(${currentUnit.id})">발음 연습하기</button>
+     <button class="btn light" onclick="renderLearnHome()">유닛 목록</button>
+    </div>
+   </div>`;
+ }else{
+  renderItem(index+1);
+ }
+}
+
+// ========================================
+// 5. TTS 음성 재생
+// ========================================
+
+function speakText(text){
+ if(!("speechSynthesis" in window)){
+  alert("이 브라우저는 음성 재생을 지원하지 않습니다.");
+  return;
+ }
+ speechSynthesis.cancel();
+ const utterance=new SpeechSynthesisUtterance(text);
+ utterance.lang="en-US";
+ utterance.rate=0.85;
+ utterance.pitch=1;
+ const voices=speechSynthesis.getVoices();
+ const american=voices.find(v=>v.lang==="en-US");
+ if(american)utterance.voice=american;
+ speechSynthesis.speak(utterance);
+}
+
+function speakCurrent(){
+ const text=document.getElementById("practiceSentence").textContent;
+ speakText(text);
+}
+
+// ========================================
+// 6. 발음 연습 선택
+// ========================================
+
+const select=document.getElementById("practiceSelect");
+let allItems=[];
+
+units.forEach(u=>u.items.forEach((item,i)=>{
+ allItems.push({...item,unitId:u.id,index:i});
+}));
+
+function initPractice(){
+ select.innerHTML=units.map(u=>
+  `<optgroup label="UNIT ${u.id} · ${u.title}">
+   ${u.items.map((item,i)=>`<option value="${u.id}-${i}">${item.word} (${item.ipa})</option>`).join("")}
+  </optgroup>`
+ ).join("");
+ select.addEventListener("change",loadPractice);
+ loadPractice();
+}
+
+function selectUnitPractice(id){
+ const u=units.find(x=>x.id===id);
+ if(!u)return;
+ select.value=id+"-0";
+ loadPractice();
+}
+
+function loadPractice(){
+ const [uid,index]=select.value.split("-").map(Number);
+ const item=units.find(u=>u.id===uid).items[index];
+ currentItem=item;
+ document.getElementById("practiceIPA").textContent=item.ipa;
+ document.getElementById("practiceWord").textContent=item.word;
+ document.getElementById("practiceMeaning").textContent=item.meaning;
+ document.getElementById("practiceTip").innerHTML="<strong>발음 TIP</strong><br>"+item.tip;
+ document.getElementById("practiceSentence").textContent=item.sentence;
+
+ ["word","sentence"].forEach(type=>{
+  document.getElementById(type+"Transcript").textContent="인식 결과가 여기에 표시됩니다.";
+  document.getElementById(type+"Feedback").classList.add("hidden");
+  document.getElementById(type+"Status").textContent="마이크를 눌러 시작하세요.";
+ });
+}
+
+function normalize(text){
+ return text.toLowerCase()
+  .replace(/[^a-z0-9\s']/g," ")
+  .replace(/\s+/g," ").trim();
+}
+
+// 단어 단위 편집거리 비교
+function editDistance(a,b){
+ const d=Array.from({length:a.length+1},()=>[]);
+ for(let i=0;i<=a.length;i++)d[i][0]=i;
+ for(let j=0;j<=b.length;j++)d[0][j]=j;
+ for(let i=1;i<=a.length;i++){
+  for(let j=1;j<=b.length;j++){
+   d[i][j]=Math.min(
+    d[i-1][j]+1,
+    d[i][j-1]+1,
+    d[i-1][j-1]+(a[i-1]===b[j-1]?0:1)
+   );
+  }
+ }
+ return d[a.length][b.length];
+}
+
+function compareText(target,spoken){
+ const a=normalize(target).split(" ").filter(Boolean);
+ const b=normalize(spoken).split(" ").filter(Boolean);
+ if(!a.length||!b.length)return 0;
+ const distance=editDistance(a,b);
+ return Math.max(0,Math.round((1-distance/Math.max(a.length,b.length))*100));
+}
+
+function makeFeedback(target,spoken,score,type){
+ const feedback=document.getElementById(type+"Feedback");
+ feedback.classList.remove("hidden","good","bad","neutral");
+ let title="",message="",cls="neutral";
+
+ if(!spoken.trim()){
+  title="인식 결과가 없습니다.";
+  message="조금 더 천천히, 마이크에 가까이 말해 보세요.";
+ }else if(score>=90){
+  title="목표 문장과 인식 결과가 매우 비슷합니다.";
+  message="좋습니다! 이제 원어민 음성과 비교하면서 자연스러운 리듬과 강세에 집중해 보세요.";
+  cls="good";
+ }else if(score>=65){
+  title="일부 단어가 다르게 인식되었습니다.";
+  message="목표 문장을 다시 확인하고, 빠진 단어나 다르게 인식된 단어를 천천히 연습해 보세요.";
+  cls="neutral";
+ }else{
+  title="목표 문장과 인식 결과에 차이가 있습니다.";
+  message="마이크와 주변 소음을 확인한 뒤 문장을 짧은 단위로 나누어 연습해 보세요.";
+  cls="bad";
+ }
+
+ feedback.className="feedback "+cls;
+ feedback.innerHTML=`<strong>${title}</strong><br>${message}
+ <div class="small" style="margin-top:8px">
+ 이 결과는 음성 인식 텍스트의 유사도이며 실제 발음 정확도 점수가 아닙니다.
+ </div>`;
+}
+
+// ========================================
+// 7. Web Speech API
+// ========================================
+
+const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+let activeRecognition=null;
+
+function startRecognition(type){
+ if(!SpeechRecognition){
+  alert("현재 브라우저에서 음성 인식을 지원하지 않습니다. 최신 Chrome 브라우저를 사용해 주세요.");
+  return;
+ }
+
+ if(activeRecognition){
+  try{activeRecognition.stop()}catch(e){}
+  activeRecognition=null;
+ }
+
+ const recognition=new SpeechRecognition();
+ recognition.lang="en-US";
+ recognition.continuous=false;
+ recognition.interimResults=true;
+ recognition.maxAlternatives=1;
+ activeRecognition=recognition;
+
+ const mic=document.getElementById(type+"Mic");
+ const status=document.getElementById(type+"Status");
+ const transcript=document.getElementById(type+"Transcript");
+ const feedback=document.getElementById(type+"Feedback");
+
+ mic.classList.add("recording");
+ status.textContent="🎙 듣고 있습니다. 지금 말해 보세요.";
+ transcript.textContent="";
+ feedback.classList.add("hidden");
+
+ let finalText="";
+
+ recognition.onresult=(event)=>{
+  let interim="";
+  for(let i=event.resultIndex;i<event.results.length;i++){
+   const text=event.results[i][0].transcript;
+   if(event.results[i].isFinal)finalText+=text;
+   else interim+=text;
+  }
+  transcript.textContent=finalText+" "+interim;
+ };
+
+ recognition.onerror=(event)=>{
+  const messages={
+   "not-allowed":"마이크 권한이 차단되었습니다. 브라우저 설정을 확인하세요.",
+   "no-speech":"음성이 감지되지 않았습니다. 다시 시도해 주세요.",
+   "network":"네트워크 오류가 발생했습니다.",
+   "audio-capture":"마이크를 찾을 수 없습니다.",
+   "service-not-allowed":"음성 인식 서비스가 허용되지 않았습니다."
+  };
+  status.textContent=messages[event.error]||"음성 인식 중 오류가 발생했습니다.";
+ };
+
+ recognition.onend=()=>{
+  mic.classList.remove("recording");
+  activeRecognition=null;
+
+  if(!finalText.trim()){
+   status.textContent="인식된 음성이 없습니다. 다시 시도해 주세요.";
+   return;
+  }
+
+  const target=type==="word"?currentItem.word:currentItem.sentence;
+  const score=compareText(target,finalText);
+
+  transcript.textContent=finalText;
+  status.textContent="음성 인식 완료";
+  makeFeedback(target,finalText,score,type);
+
+  saved.attempts=saved.attempts||[];
+  saved.attempts.push({
+   word:currentItem.word,
+   type:type,
+   score:score,
+   date:new Date().toISOString()
+  });
+  if(saved.attempts.length>200)saved.attempts.shift();
+  saveData();
+  updateDashboard();
+ };
+
+ try{
+  recognition.start();
+ }catch(e){
+  mic.classList.remove("recording");
+  status.textContent="마이크를 시작하지 못했습니다. 다시 시도해 주세요.";
+  activeRecognition=null;
+ }
+}
+
+// ========================================
+// 8. 기록 초기화 및 초기 실행
+// ========================================
+
+function resetProgress(){
+ if(!confirm("모든 학습 기록을 삭제할까요?"))return;
+ saved={};
+ saveData();
+ updateDashboard();
+ renderUnits();
+ alert("학습 기록을 초기화했습니다.");
+}
+
+renderUnits();
+initPractice();
+updateDashboard();
+
+</script>
+</body>
+</html>
